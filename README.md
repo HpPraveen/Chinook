@@ -17,10 +17,11 @@ Please put the code in Github. Please put the original code (our code) in the ma
 
 -----------------------------------------------------------------
 Tasks done:
+- Development done on 'development' branch in git.
 - Used some MudBlazor components.
 - Moved and added data retrieval methods to service classes.
 - When 1st time add a track to your favorites, it automatically created a playlist "My favorite tracks" 
-  and all your favorite tracks add to it
+  and all your favorite tracks add to it.
 - You can add tracks to any playlist and can create a new playlist when adding.
 - Add user's playlists to nav menu.
 - You can searched Artist by name.
