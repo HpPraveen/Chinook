@@ -1,4 +1,7 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Chinook.Services.Interfaces
+@using Chinook.Domain.Models
+@using System.Security.Claims
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Chinook</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -10,25 +13,74 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span>Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            @*
-            <NavLink class="nav-link" href="playlist/playlistnumber">
-            <i class="bi bi-music-note-list me-3" style="font-size: 1.25em"></i>My favorite tracks
-            </NavLink>
-            *@
-        </div>
+            <MudList Clickable="true">
 
+                <MudLink Href="#" Color="Color.Secondary">
+                    <MudListItem Icon="@Icons.Material.Outlined.Home" IconColor="Color.Secondary">
+                        Home
+                    </MudListItem>
+                </MudLink>
+
+                <MudLink Href="playlist/playlistnumber" Color="Color.Success">
+                    <MudListItem Icon="@Icons.Material.Filled.Star" IconColor="Color.Success">
+                        Favorites (@FavoritePlaylist.Tracks.Count)
+                    </MudListItem>
+                </MudLink>
+
+                <MudListItem Icon="@Icons.Material.Outlined.VideoLibrary" IconColor="Color.Info"
+                             Text="My Play Lists" InitiallyExpanded="false">
+                    <NestedList>
+                        @if (UserPlayLists.Count > 0)
+                        {
+                            @foreach (var userPlayList in UserPlayLists)
+                            {
+                                <MudLink Href="#">
+                                    <MudListItem Icon="@Icons.Material.Outlined.MusicNote" IconColor="Color.Info">
+                                        @userPlayList.Playlist.Name (@userPlayList.Playlist.Tracks.Count)
+                                    </MudListItem>
+                                </MudLink>
+                            }
+
+
+                        }
+                    </NestedList>
+                </MudListItem>
+
+            </MudList>
+
+        </div>
     </nav>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
+    [Inject] ITrackService TrackService { get; set; }
+    [Inject] IPlayListService PlayListService { get; set; }
+    [CascadingParameter] private Task<AuthenticationState> authenticationState { get; set; }
 
+    private string? currentUserId;
+    private bool collapseNavMenu = true;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private List<UserPlaylist> UserPlayLists;
+    private Playlist? FavoritePlaylist;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InvokeAsync(StateHasChanged);
+        currentUserId = await GetUserId();
+        if (currentUserId != null)
+        {
+            UserPlayLists = PlayListService.GetUserPlaylist(currentUserId);
+            FavoritePlaylist = PlayListService.GetFavoritePlaylist(currentUserId);
+        }
+    }
+
+    private async Task<string?> GetUserId()
+    {
+        var user = (await authenticationState).User;
+        var userId = user.FindFirst(u => u.Type.Contains(ClaimTypes.NameIdentifier))?.Value;
+        return userId;
+    }
 
     private void ToggleNavMenu()
     {
