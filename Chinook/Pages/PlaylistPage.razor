@@ -1,9 +1,9 @@
 ﻿@page "/playlist/{PlaylistId:long}"
-@attribute [Authorize]
-
-@using Chinook.Models
+@using Chinook.Domain
 @using Microsoft.EntityFrameworkCore
-@using System.Security.Claims;
+@using System.Security.Claims
+@using Chinook.Domain.ClientModels
+@attribute [Authorize]
 
 <h1>Playlist <strong>@Playlist.Name</strong></h1>
 
@@ -21,7 +21,7 @@
 
 @if (Playlist == null)
 {
-     <Loading />
+    <Loading />
 }
 else
 {
@@ -30,7 +30,7 @@ else
             <tr>
                 <th>Track</th>
                 <th></th>
-        </tr>
+            </tr>
         </thead>
         <tbody>
             @foreach (var track in Playlist.Tracks)
@@ -65,7 +65,7 @@ else
     [Inject] IDbContextFactory<ChinookContext> DbFactory { get; set; }
     [CascadingParameter] private Task<AuthenticationState> authenticationState { get; set; }
 
-    private Chinook.ClientModels.Playlist Playlist;
+    private Playlist Playlist;
     private string CurrentUserId;
     private string InfoMessage;
 
@@ -79,16 +79,16 @@ else
         Playlist = DbContext.Playlists
             .Include(a => a.Tracks).ThenInclude(a => a.Album).ThenInclude(a => a.Artist)
             .Where(p => p.PlaylistId == PlaylistId)
-            .Select(p => new ClientModels.Playlist()
+            .Select(p => new Playlist()
                 {
                     Name = p.Name,
-                    Tracks = p.Tracks.Select(t => new ClientModels.PlaylistTrack()
+                    Tracks = p.Tracks.Select(t => new PlaylistTrack()
                     {
                         AlbumTitle = t.Album.Title,
                         ArtistName = t.Album.Artist.Name,
                         TrackId = t.TrackId,
                         TrackName = t.Name,
-                        IsFavorite = t.Playlists.Where(p => p.UserPlaylists.Any(up => up.UserId == CurrentUserId && up.Playlist.Name == "Favorites")).Any()
+                        IsFavorite = t.Playlists.Any(p => p.UserPlaylists.Any(up => up.UserId == CurrentUserId && up.Playlist.Name == "Favorites"))
                     }).ToList()
                 })
             .FirstOrDefault();

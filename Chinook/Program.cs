@@ -1,6 +1,6 @@
-using Chinook;
 using Chinook.Areas.Identity;
-using Chinook.Models;
+using Chinook.Domain;
+using Chinook.Domain.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 

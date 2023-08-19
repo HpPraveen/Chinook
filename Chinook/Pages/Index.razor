@@ -1,8 +1,8 @@
-﻿@page "/"
-@attribute [Authorize]
-
-@using Chinook.Models
+﻿page "/"
+@using Chinook.Domain.Models
+@using Chinook.Domain
 @using Microsoft.EntityFrameworkCore
+@attribute [Authorize]
 
 <PageTitle>Index</PageTitle>
 
@@ -37,16 +37,17 @@ else
     private List<Artist> Artists;
     [Inject] IDbContextFactory<ChinookContext> DbFactory { get; set; }
 
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnInitializedAsync()
+    {
         await InvokeAsync(StateHasChanged);
         Artists = await GetArtists();
     }
 
     public async Task<List<Artist>> GetArtists()
-    {   
+    {
         var dbContext = await DbFactory.CreateDbContextAsync();
         var users = dbContext.Users.Include(a => a.UserPlaylists).ToList();
-        
+
         return dbContext.Artists.ToList();
     }
 

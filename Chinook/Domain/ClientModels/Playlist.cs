@@ -1,4 +1,4 @@
-namespace Chinook.ClientModels;
+namespace Chinook.Domain.ClientModels;
 
 public class Playlist
 {
