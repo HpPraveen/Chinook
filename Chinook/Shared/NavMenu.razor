@@ -30,7 +30,7 @@
                 <MudListItem Icon="@Icons.Material.Outlined.VideoLibrary" IconColor="Color.Info"
                              Text="My Play Lists" InitiallyExpanded="false">
                     <NestedList>
-                        @if (UserPlayLists.Count > 0)
+                        @if (UserPlayLists?.Count > 0)
                         {
                             @foreach (var userPlayList in UserPlayLists)
                             {
@@ -72,11 +72,24 @@
     {
         await InvokeAsync(StateHasChanged);
         currentUserId = await GetUserId();
+        GetPlayLists();
+
+        TrackService.PlayListUpdated += HandlePlaylistUpdated;
+    }
+
+    private void HandlePlaylistUpdated()
+    {
+        GetPlayLists();
+        StateHasChanged();
+    }
+
+    private void GetPlayLists()
+    {
         if (currentUserId != null)
         {
             UserPlayLists = PlayListService.GetUserPlaylist(currentUserId);
             FavoritePlaylist = PlayListService.GetFavoritePlaylist(currentUserId);
-        }
+        }        
     }
 
     private async Task<string?> GetUserId()
@@ -90,5 +103,4 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
-
 }

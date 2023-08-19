@@ -10,6 +10,7 @@ namespace Chinook.Services
     public class TrackService : ITrackService
     {
         private readonly IDbContextFactory<ChinookContext> _dbFactory;
+        public event Action PlayListUpdated;
 
         public TrackService(IDbContextFactory<ChinookContext> dbFactory)
         {
@@ -100,6 +101,7 @@ namespace Chinook.Services
                 }
 
                 dbContext.SaveChanges();
+                PlayListUpdated?.Invoke();
                 return true;
             }
             catch (Exception ex)
