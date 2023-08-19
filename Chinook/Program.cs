@@ -1,6 +1,8 @@
 using Chinook.Areas.Identity;
 using Chinook.Domain;
 using Chinook.Domain.Models;
+using Chinook.Services;
+using Chinook.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
@@ -16,9 +18,13 @@ builder.Services.AddDefaultIdentity<ChinookUser>(options => options.SignIn.Requi
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddMudServices();
 
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ChinookUser>>();
+builder.Services.AddScoped<IArtistService, ArtistService>();
+builder.Services.AddScoped<ITrackService, TrackService>();
+builder.Services.AddScoped<IPlayListService, PlayListService>();
+
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 
