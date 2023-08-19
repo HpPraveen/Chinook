@@ -91,7 +91,7 @@ namespace Chinook.Services
                     }
                     else
                     {
-                        if (isRemove == true)
+                        if (isRemove)
                         {
                             // Remove the track from the favorite playlist
                             existingPlaylist?.Tracks?.Remove(existingFavoriteTrack);
