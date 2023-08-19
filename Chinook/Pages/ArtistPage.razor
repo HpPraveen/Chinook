@@ -11,14 +11,17 @@
 
 @if (showFavAlert)
 {
-
     <MudAlert Severity="Severity.Success" Variant="Variant.Filled" ShowCloseIcon="true"
-              CloseIconClicked="(() => CloseInfoMessage(true))">@favInfoMessage</MudAlert>
+              CloseIconClicked="() => CloseInfoMessage(true)">
+        @favInfoMessage
+    </MudAlert>
 }
 else if (showUnFavAlert)
 {
     <MudAlert Severity="Severity.Error" Variant="Variant.Filled" ShowCloseIcon="true"
-              CloseIconClicked="(() => CloseInfoMessage(true))">@unFavInfoMessage</MudAlert>
+              CloseIconClicked="() => CloseInfoMessage(true)">
+        @unFavInfoMessage
+    </MudAlert>
 }
 
 @if (Artist == null)
@@ -45,34 +48,53 @@ else
                     <td>
                         @if (track.IsFavorite)
                         {
-                            <a href="#" class="m-1" title="Un-mark as favorite" @onclick="@(() => UnFavoriteTrack(track.TrackId))" @onclick:preventDefault><i class="bi bi-star-fill"></i></a>
+                            <a href="#" class="m-1" title="Un-mark as favorite" @onclick="@(() => UnFavoriteTrack(track.TrackId))" @onclick:preventDefault>
+                                <i class="bi bi-star-fill"></i>
+                            </a>
                         }
                         else
                         {
-                            <a href="#" class="m-1" title="Mark as favorite" @onclick="@(() => FavoriteTrack(track.TrackId))" @onclick:preventDefault><i class="bi bi-star"></i></a>
+                            <a href="#" class="m-1" title="Mark as favorite" @onclick="@(() => FavoriteTrack(track.TrackId))" @onclick:preventDefault>
+                                <i class="bi bi-star"></i>
+                            </a>
                         }
-                        <a href="#" class="m-1" title="Add to playlist" @onclick="@(() => OpenPlaylistDialog(track.TrackId))" @onclick:preventDefault><i class="bi bi-file-earmark-plus"></i></a>
+                        <a href="#" class="m-1" title="Add to playlist" @onclick="@(() => OpenPlaylistDialog(track.TrackId))" @onclick:preventDefault>
+                            <i class="bi bi-file-earmark-plus"></i>
+                        </a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-
 }
 
 @code {
-    [Parameter] public long ArtistId { get; set; }
-    [CascadingParameter] private Task<AuthenticationState> authenticationState { get; set; }
-    [Inject] IDbContextFactory<ChinookContext> DbFactory { get; set; }
-    [Inject] IArtistService ArtistService { get; set; }
-    [Inject] ITrackService TrackService { get; set; }
-    [Inject] IPlayListService PlayListService { get; set; }
+
+    [Parameter]
+    public long ArtistId { get; set; }
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
+    [Inject]
+    IDbContextFactory<ChinookContext> DbFactory { get; set; }
+
+    [Inject]
+    IArtistService ArtistService { get; set; }
+
+    [Inject]
+    ITrackService TrackService { get; set; }
+
+    [Inject]
+    IPlayListService PlayListService { get; set; }
+
     private Modal PlaylistDialog { get; set; }
     private Artist Artist;
     private List<UserPlaylist> UserPlayLists;
     private List<PlaylistTrack> Tracks;
     private DbContext DbContext;
     private PlaylistTrack SelectedTrack;
+
     private string favInfoMessage;
     private string unFavInfoMessage;
     private bool showFavAlert;
@@ -193,7 +215,9 @@ else
                     </MudSelect>
                     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add"
                                Color="Color.Info" Size="Size.Small"
-                               OnClick="AddTrackToExistingPlayList">Add To Existing</MudButton>
+                               OnClick="AddTrackToExistingPlayList">
+                        Add To Existing
+                    </MudButton>
 
                 </MudItem>
             </MudGrid>
@@ -204,7 +228,9 @@ else
                 <MudTextField @bind-Value="newPlayListName" Label="Create new playlist" Variant="Variant.Outlined" />
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Create"
                            Color="Color.Success" Size="Size.Small"
-                           OnClick="AddTrackToNewPlayList">Add To New</MudButton>
+                           OnClick="AddTrackToNewPlayList">
+                    Add To New
+                </MudButton>
             </MudItem>
         </MudGrid>
 

@@ -51,9 +51,15 @@
 </div>
 
 @code {
-    [Inject] ITrackService TrackService { get; set; }
-    [Inject] IPlayListService PlayListService { get; set; }
-    [CascadingParameter] private Task<AuthenticationState> authenticationState { get; set; }
+
+    [Inject]
+    ITrackService TrackService { get; set; }
+
+    [Inject]
+    IPlayListService PlayListService { get; set; }
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
 
     private string? currentUserId;
     private bool collapseNavMenu = true;
@@ -84,4 +90,5 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
 }

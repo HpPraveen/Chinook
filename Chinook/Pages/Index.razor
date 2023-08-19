@@ -34,7 +34,9 @@ else
                 @foreach (var artist in Artists)
                 {
                     <tr>
-                        <td><a href="Artist/@artist.ArtistId">@artist.Name</a></td>
+                        <td>
+                            <a href="Artist/@artist.ArtistId">@artist.Name</a>
+                        </td>
                         <td>@artist.Albums.Count()</td>
                     </tr>
                 }
@@ -44,11 +46,15 @@ else
 }
 
 @code {
-    [Inject] IDbContextFactory<ChinookContext> DbFactory { get; set; }
-    [Inject] IArtistService ArtistService { get; set; }
+    [Inject]
+    IDbContextFactory<ChinookContext> DbFactory { get; set; }
+
+    [Inject]
+    IArtistService ArtistService { get; set; }
 
     private string searchTerm;
     private List<Artist> AllArtists;
+
     private List<Artist> Artists => string.IsNullOrWhiteSpace(searchTerm)
         ? AllArtists : GetSearchedArtists();
 
@@ -61,8 +67,7 @@ else
     public List<Artist> GetSearchedArtists()
     {
         return AllArtists.Where(a => a.Name != null
-                                   && a.Name.ToLower().Contains(searchTerm.ToLower())).ToList();
-
+                                     && a.Name.ToLower().Contains(searchTerm.ToLower())).ToList();
     }
 
     public async Task<List<Album>> GetAlbumsForArtist(int artistId)
