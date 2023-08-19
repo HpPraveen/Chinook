@@ -23,7 +23,7 @@
 
                 <MudLink Href="playlist/playlistnumber" Color="Color.Success">
                     <MudListItem Icon="@Icons.Material.Filled.Star" IconColor="Color.Success">
-                        Favorites (@FavoritePlaylist.Tracks.Count)
+                        Favorites (@FavoritePlaylist?.Tracks.Count)
                     </MudListItem>
                 </MudLink>
 
@@ -40,8 +40,6 @@
                                     </MudListItem>
                                 </MudLink>
                             }
-
-
                         }
                     </NestedList>
                 </MudListItem>
